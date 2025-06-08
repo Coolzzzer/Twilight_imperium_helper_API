@@ -118,7 +118,7 @@ const data = [
     {player:"Андрей Жук", fraction: 17, result: false},
     {player:"Рома", fraction: 12, result: false}
   ]},
-    { date: "23.05.2025", quantity: 6, set:[
+    { date: "05.23.2025", quantity: 6, set:[
     {player:"Андрей Жук", fraction: 13, result: false},
     {player:"Рома", fraction: 16, result: false},
     {player:"Максим Алешин", fraction: 24, result: true},
