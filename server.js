@@ -19,18 +19,21 @@ const data = [
 ];
 
 // 1) Метод получения данных из первого массива
-app.get('/first', (req, res) => {
+app.get('/initial', (req, res) => {
   res.json(data[0]);
 });
 
 // 2) Метод получения данных из второго массива
-app.get('/second', (req, res) => {
+app.get('/result', (req, res) => {
   res.json(data[1]);
+});
+app.get('/date', (req, res) => {
+  res.json(data[2]);
 });
 
 // 3) Метод изменения данных из второго массива
 // Здесь будем обновлять объект по его id в массиве
-app.put('/second/:id', (req, res) => {
+app.put('/result/:id', (req, res) => {
   const objId = parseInt(req.params.id, 10);
   // Ищем индекс объекта во втором массиве
   const index = data[1].findIndex(obj => obj.id === objId);
@@ -44,6 +47,21 @@ app.put('/second/:id', (req, res) => {
   data[1][index] = { ...data[1][index], ...req.body };
 
   res.json(data[1][index]);
+});
+app.put('/date/:id', (req, res) => {
+  const objId = parseInt(req.params.id, 10);
+  // Ищем индекс объекта во втором массиве
+  const index = data[2].findIndex(obj => obj.id === objId);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Объект не найден' });
+  }
+
+  // Обновляем данные объекта. Для простоты предполагаем, что передаётся весь объект.
+  // Можно использовать более избирательное обновление полей.
+  data[1][index] = { ...data[2][index], ...req.body };
+
+  res.json(data[2][index]);
 });
 
 // Запуск сервера на порту 3000
