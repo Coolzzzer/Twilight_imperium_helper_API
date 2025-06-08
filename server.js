@@ -108,10 +108,16 @@ const data = [
     srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png" },
   ],
   [
-    { id: 1, win: 0, game:0, history:[{date: "", player: "", result: true }]},
+    { id: 1, win: 0, game:0},
   ],
   [
-    { date: "", quantity: 1, set:[{player:"", fraction: 1, result: false}]},
+    { date: "06.06.2025", quantity: 5, set:[
+    {player:"Миша", fraction: 3, result: true},
+    {player:"Максим Алешин", fraction: 22, result: false},
+    {player:"Максим", fraction: 15, result: false},
+    {player:"Андрей Жук", fraction: 18, result: false},
+    {player:"Рома", fraction: 13, result: false}
+  ]},
   ]
 ];
 
