@@ -108,9 +108,6 @@ const data = [
     srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png" },
   ],
   [
-    { id: 1, win: 0, game:0},
-  ],
-  [
     { date: "06.06.2025", quantity: 5, set:[
     {player:"Миша", fraction: 2, result: true},
     {player:"Максим Алешин", fraction: 21, result: false},
@@ -129,16 +126,22 @@ const data = [
   ]
 ];
 
-app.get('/initial', (req, res) => {
-  res.json(data[0]);
+app.post('/date', (req, res) => {
+  const { date, quantity, set } = req.body;
+
+  if (!date || !quantity || !Array.isArray(set)) {
+    return res.status(400).json({ error: "Некорректные данные" });
+  }
+
+  const newMatch = { date, quantity, set };
+  data[1].push(newMatch);
+
+  res.status(201).json({ message: "Матч добавлен!", match: newMatch });
 });
-app.get('/result', (req, res) => {
-  res.json(data[1]);
-});
-app.get('/date', (req, res) => {
-  res.json(data[2]);
-});
-app.put('/result/:id', (req, res) => {
+
+app.get('/initial', (req, res) => res.json(data[0]));
+app.get('/date', (req, res) => res.json(data[1]));
+app.put('/date/:id', (req, res) => {
   const objId = parseInt(req.params.id, 10);
   const index = data[1].findIndex(obj => obj.id === objId);
 
@@ -147,18 +150,6 @@ app.put('/result/:id', (req, res) => {
   }
 
   data[1][index] = { ...data[1][index], ...req.body };
-
-  res.json(data[1][index]);
-});
-app.put('/date/:id', (req, res) => {
-  const objId = parseInt(req.params.id, 10);
-  const index = data[2].findIndex(obj => obj.id === objId);
-
-  if (index === -1) {
-    return res.status(404).json({ message: 'Объект не найден' });
-  }
-
-  data[2][index] = { ...data[2][index], ...req.body };
 
   res.json(data[2][index]);
 });
