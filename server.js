@@ -112,11 +112,11 @@ const data = [
   ],
   [
     { date: "06.06.2025", quantity: 5, set:[
-    {player:"Миша", fraction: 3, result: true},
-    {player:"Максим Алешин", fraction: 22, result: false},
-    {player:"Максим", fraction: 15, result: false},
-    {player:"Андрей Жук", fraction: 18, result: false},
-    {player:"Рома", fraction: 13, result: false}
+    {player:"Миша", fraction: 2, result: true},
+    {player:"Максим Алешин", fraction: 21, result: false},
+    {player:"Максим", fraction: 14, result: false},
+    {player:"Андрей Жук", fraction: 17, result: false},
+    {player:"Рома", fraction: 12, result: false}
   ]},
   ]
 ];
