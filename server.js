@@ -8,7 +8,7 @@ app.use(express.json());
 // Создаем массив из двух массивов с объектами
 const data = [
   [
-    { id: 1, name: "Альянс Нааз-Роха", srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/Альянс.PNG", srcToken: "", srcLogo: "" },
+    { id: 1, name: "Альянс Нааз-Роха", srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Альянс.PNG", srcToken: "", srcLogo: "" },
   ],
   [
     { id: 1, win: 0, game:0, history:[{date: "", player: "", result: true }]},
