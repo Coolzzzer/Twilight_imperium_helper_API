@@ -1,11 +1,9 @@
-// Подключение библиотеки Express
 const express = require('express');
 const app = express();
-
-// Позволяет получать данные в формате JSON в теле запроса
+const cors = require('cors');
+app.use(cors());
 app.use(express.json());
 
-// Создаем массив из двух массивов с объектами
 const data = [
   [
     { id: 1, name: "Альянс Нааз-Роха", 
@@ -57,9 +55,9 @@ const data = [
     srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Клубок.PNG", 
     srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Клубок.png" },
     { id: 13, name: "Коалиция ментака", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Кофлиция.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Кофлиция.PNG", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Кофлиция.png" },
+    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Коaлиция.PNG", 
+    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Коaлиция.PNG", 
+    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Коaлиция.png" },
     { id: 14, name: "Королевство ззча", 
     srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Королевство.PNG", 
     srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Королевство.PNG", 
@@ -117,6 +115,7 @@ const data = [
   ]
 ];
 
+// Прочие эндпоинты
 app.get('/initial', (req, res) => {
   res.json(data[0]);
 });
@@ -126,42 +125,48 @@ app.get('/result', (req, res) => {
 app.get('/date', (req, res) => {
   res.json(data[2]);
 });
-
-// 3) Метод изменения данных из второго массива
-// Здесь будем обновлять объект по его id в массиве
 app.put('/result/:id', (req, res) => {
   const objId = parseInt(req.params.id, 10);
-  // Ищем индекс объекта во втором массиве
   const index = data[1].findIndex(obj => obj.id === objId);
 
   if (index === -1) {
     return res.status(404).json({ message: 'Объект не найден' });
   }
 
-  // Обновляем данные объекта. Для простоты предполагаем, что передаётся весь объект.
-  // Можно использовать более избирательное обновление полей.
   data[1][index] = { ...data[1][index], ...req.body };
 
   res.json(data[1][index]);
 });
 app.put('/date/:id', (req, res) => {
   const objId = parseInt(req.params.id, 10);
-  // Ищем индекс объекта во втором массиве
   const index = data[2].findIndex(obj => obj.id === objId);
 
   if (index === -1) {
     return res.status(404).json({ message: 'Объект не найден' });
   }
 
-  // Обновляем данные объекта. Для простоты предполагаем, что передаётся весь объект.
-  // Можно использовать более избирательное обновление полей.
-  data[1][index] = { ...data[2][index], ...req.body };
+  data[2][index] = { ...data[2][index], ...req.body };
 
   res.json(data[2][index]);
 });
 
-// Запуск сервера на порту 3000
-const PORT = 3000;
+app.get('/initial/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const faction = data[0].find(item => item.id === id);
+
+  if (!faction) {
+    return res.status(404).json({ message: 'Фракция не найдена' });
+  }
+  res.json({ 
+    id: faction.id, 
+    name: faction.name,
+    srcInfo: faction.srcInfo, 
+    srcToken: faction.srcToken, 
+    srcLogo: faction.srcLogo 
+  });
+});
+
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });
