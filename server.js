@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const db = require('./firebase');
+const { v4: uuidv4 } = require('uuid'); 
 app.use(cors());
 app.use(express.json());
 
-const data = [
+const data ={matches: 
   [
     { id: 0, name: "Альянс Нааз-Роха", 
     srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Альянс.PNG", 
@@ -106,68 +108,128 @@ const data = [
     srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Хаканские.PNG", 
     srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Хаканские.PNG", 
     srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png" },
-  ],
-  [
-    { date: "06.06.2025", quantity: 5, set:[
-    {player:"Миша", fraction: 2, result: true},
-    {player:"Максим Алешин", fraction: 21, result: false},
-    {player:"Максим", fraction: 14, result: false},
-    {player:"Андрей Жук", fraction: 17, result: false},
-    {player:"Рома", fraction: 12, result: false}
-  ]},
-    { date: "05.23.2025", quantity: 6, set:[
-    {player:"Андрей Жук", fraction: 13, result: false},
-    {player:"Рома", fraction: 16, result: false},
-    {player:"Максим Алешин", fraction: 24, result: true},
-    {player:"Андрей Борденюк", fraction: 11, result: false},
-    {player:"Миша", fraction: 1, result: false},
-    {player:"Максим", fraction: 10, result: false}
-  ]}
   ]
-];
+} 
 
-app.post('/date', (req, res) => {
+app.post('/data', async (req, res) => {
   const { date, quantity, set } = req.body;
 
   if (!date || !quantity || !Array.isArray(set)) {
     return res.status(400).json({ error: "Некорректные данные" });
   }
 
-  const newMatch = { date, quantity, set };
-  data[1].push(newMatch);
+  data.matches.push({ date, quantity, set });
 
-  res.status(201).json({ message: "Матч добавлен!", match: newMatch });
-});
+  await db.collection("users").doc("andrey").set(data);
 
-app.get('/initial', (req, res) => res.json(data[0]));
-app.get('/date', (req, res) => res.json(data[1]));
-app.put('/date/:id', (req, res) => {
-  const objId = parseInt(req.params.id, 10);
-  const index = data[1].findIndex(obj => obj.id === objId);
-
-  if (index === -1) {
-    return res.status(404).json({ message: 'Объект не найден' });
-  }
-
-  data[1][index] = { ...data[1][index], ...req.body };
-
-  res.json(data[2][index]);
+  res.status(201).json({ message: "Матч добавлен!", match: { date, quantity, set } });
 });
 
 app.get('/initial/:id', (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  const faction = data[0].find(item => item.id === id);
+  const id = parseInt(req.params.id, 10); 
+
+  if (!Array.isArray(data.matches)) {
+    return res.status(500).json({ message: "Ошибка: данные о фракциях отсутствуют или имеют неверный формат" });
+  }
+
+  const faction = data.matches.find(item => item.id === id);
 
   if (!faction) {
-    return res.status(404).json({ message: 'Фракция не найдена' });
+    return res.status(404).json({ message: "Фракция не найдена" });
   }
-  res.json({ 
-    id: faction.id, 
-    name: faction.name,
-    srcInfo: faction.srcInfo, 
-    srcToken: faction.srcToken, 
-    srcLogo: faction.srcLogo 
-  });
+
+  res.json(faction);
+});
+
+app.post('/date', async (req, res) => {
+  const { date, quantity, set } = req.body;
+
+  if (!date || !quantity || !Array.isArray(set)) {
+    return res.status(400).json({ error: "Некорректные данные" });
+  }
+
+  try {
+    const userRef = db.collection("users").doc("andrey");
+    const doc = await userRef.get();
+    let matches = doc.exists ? doc.data().matches || [] : [];
+
+    const newMatch = { id: uuidv4(), date, quantity, set };
+
+    matches.push(newMatch);
+    await userRef.set({ matches }, { merge: true });
+
+    res.status(201).json({ message: "Матч добавлен!", match: newMatch });
+  } catch (error) {
+    console.error("Ошибка Firestore:", error.message);
+    res.status(500).json({ error: "Ошибка записи в Firestore", details: error.message });
+  }
+});
+app.delete('/date/:id', async (req, res) => {
+  const objId = req.params.id;
+
+  try {
+    const userRef = db.collection("users").doc("andrey");
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: "Данные не найдены" });
+    }
+
+    let matches = doc.data().matches || [];
+    const newMatches = matches.filter(match => match.id !== objId); 
+
+    if (matches.length === newMatches.length) {
+      return res.status(404).json({ message: "Матч с таким ID не найден" });
+    }
+
+    await userRef.set({ matches: newMatches }, { merge: true });
+
+    res.status(200).json({ message: "Матч удален!" });
+  } catch (error) {
+    console.error("Ошибка удаления:", error.message);
+    res.status(500).json({ error: "Ошибка удаления из Firestore", details: error.message });
+  }
+});
+
+app.get('/date', async (req, res) => {
+  try {
+    const doc = await db.collection("users").doc("andrey").get();
+
+    if (doc.exists && doc.data().matches) {
+      res.json(doc.data().matches);
+    } else {
+      res.json({ message: "Данные отсутствуют" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Ошибка чтения из Firestore", details: error.message });
+  }
+});
+
+app.put('/date/:id', async (req, res) => {
+  const objId = parseInt(req.params.id, 10);
+
+  try {
+    const userRef = db.collection("users").doc("andrey");
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: "Данные не найдены" });
+    }
+
+    const userData = doc.data();
+    const index = userData.matches.findIndex(match => match.id === objId);
+
+    if (index === -1) {
+      return res.status(404).json({ message: "Матч не найден" });
+    }
+
+    userData.matches[index] = { ...userData.matches[index], ...req.body };
+    await userRef.set(userData);
+
+    res.json(userData.matches[index]);
+  } catch (error) {
+    res.status(500).json({ error: "Ошибка обновления данных", details: error.message });
+  }
 });
 
 const PORT = 5000;
