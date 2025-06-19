@@ -108,6 +108,20 @@ const data ={matches:
     srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Хаканские.PNG", 
     srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Хаканские.PNG", 
     srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png" },
+    { id: 25, 
+    data:[
+      {id:"i10",name:"10",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/10.png"},
+      {id:"i14",name:"14",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/14.png"},
+      {id:"iM",name:"M",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/Мегатол.png"},
+      {id:"c1",name:"1",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/1.PNG"},
+      {id:"c2",name:"2",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/2.PNG"},
+      {id:"cA",name:"A",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Артефакт.PNG"},
+      {id:"cD",name:"D",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Действия.PNG"},
+      {id:"cZ",name:"Z",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Закон.PNG"},
+      {id:"cO",name:"O",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Обещание.PNG"},
+      {id:"cS",name:"S",src:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Секретная.PNG"}
+    ]}
+
   ]
 } 
 
