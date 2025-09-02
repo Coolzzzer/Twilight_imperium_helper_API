@@ -1,131 +1,282 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
-const db = require('./firebase');
-const { v4: uuidv4 } = require('uuid'); 
+const cors = require("cors");
+const db = require("./firebase");
+const { v4: uuidv4 } = require("uuid");
 app.use(cors());
 app.use(express.json());
 
-const data ={matches: 
-  [
-    { id: 0, name: "Альянс Нааз-Роха", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Альянс.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Альянс.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Альянс.png" },
-    { id: 1, name: "Арбореки", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Арбореки.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Арбореки.PNG", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Арбореки.png" },
-    { id: 2, name: "Баранат летнев", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Баранат.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Баранат.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Баранат.png" },
-    { id: 3, name: "Братство инь", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Братство.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Братство.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Братство.png" },
-    { id: 4, name: "Винну", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Винну.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Винну.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Винну.png" },
-    { id: 5, name: "Возвышенные", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Возвышенные.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Возвышенные.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Возвышенные.png" },
-    { id: 6, name: "Генные чародеи мэхакт", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Генные.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Генные.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Генные.png" },
-    { id: 7, name: "Жол-нарские университеты", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Жол-нарские.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Жол-нарские.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Жол-нарские.png" },
-    { id: 8, name: "Кабал вуил'рэйт", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Кабал.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Кабал.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Кабал.png" },
-    { id: 9, name: "Келерес совета", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Келерес.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Келерес.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Келерес.png" },
-    { id: 10, name: "Клан сааров", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Клан.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Клан.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Клан.png" },
-    { id: 11, name: "Клубок наалу", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Клубок.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Клубок.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Клубок.png" },
-    { id: 12, name: "Коалиция ментака", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Коалиция.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Коалиция.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Коалиция.png" },
-    { id: 13, name: "Королевство ззча", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Королевство.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Королевство.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Королевство.png" },
-    { id: 14, name: "Кочевник", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Кочевник.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Кочевник.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Кочевник.png" },
-    { id: 15, name: "Некровирус", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Некровирус.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Некровирус.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Некровирус.png" },
-    { id: 16, name: "Племена исарилов", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Племена.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Племена.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Племена.png" },
-    { id: 17, name: "Призраки креусса", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Призраки.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Призраки.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Призраки.png" },
-    { id: 18, name: "Психосеть л1з1кс", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Психосеть.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Психосеть.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Психосеть.png" },
-    { id: 19, name: "Сардак н'орр", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Сардак.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Сардак.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Сардак.png" },
-    { id: 20, name: "Серебряная стая", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Серебряная.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Серебряная.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Серебряная.png" },
-    { id: 21, name: "Титаны ула", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Титаны.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Титаны.PNG", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Титаны.png" },
-    { id: 22, name: "Тлеющие с муаата", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Тлеющие.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Тлеющие.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Тлеющие.png" },
-    { id: 23, name: "Федерация сол", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Федерация.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Федерация.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Федерация.png" },
-    { id: 24, name: "Хаканские эмираты", 
-    srcInfo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Хаканские.PNG", 
-    srcToken: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Хаканские.png", 
-    srcLogo: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png" },
-    { id: 25, 
-      data:{
-        i10:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/src/item/10.png",
-        i14:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/src/item/14.png",
-        iM:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/Мегатол.png",
-        c1:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/1.PNG",
-        c2:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/2.PNG",
-        cA:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Артефакт.PNG",
-        cD:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Действия.PNG",
-        cZ:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Закон.PNG",
-        cO:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Обещание.PNG",
-        cS:"https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Секретная.PNG"
-      }
-    }
-  ]
-} 
+const data = {
+  matches: [
+    {
+      id: 0,
+      name: "Альянс Нааз-Роха",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Альянс.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Альянс.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Альянс.png",
+    },
+    {
+      id: 1,
+      name: "Арбореки",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Арбореки.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Арбореки.PNG",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Арбореки.png",
+    },
+    {
+      id: 2,
+      name: "Баранат летнев",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Баранат.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Баранат.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Баранат.png",
+    },
+    {
+      id: 3,
+      name: "Братство инь",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Братство.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Братство.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Братство.png",
+    },
+    {
+      id: 4,
+      name: "Винну",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Винну.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Винну.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Винну.png",
+    },
+    {
+      id: 5,
+      name: "Возвышенные",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Возвышенные.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Возвышенные.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Возвышенные.png",
+    },
+    {
+      id: 6,
+      name: "Генные чародеи мэхакт",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Генные.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Генные.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Генные.png",
+    },
+    {
+      id: 7,
+      name: "Жол-нарские университеты",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Жол-нарские.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Жол-нарские.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Жол-нарские.png",
+    },
+    {
+      id: 8,
+      name: "Кабал вуил'рэйт",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Кабал.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Кабал.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Кабал.png",
+    },
+    {
+      id: 9,
+      name: "Келерес совета",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Келерес.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Келерес.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Келерес.png",
+    },
+    {
+      id: 10,
+      name: "Клан сааров",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Клан.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Клан.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Клан.png",
+    },
+    {
+      id: 11,
+      name: "Клубок наалу",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Клубок.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Клубок.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Клубок.png",
+    },
+    {
+      id: 12,
+      name: "Коалиция ментака",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Коалиция.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Коалиция.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Коалиция.png",
+    },
+    {
+      id: 13,
+      name: "Королевство ззча",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Королевство.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Королевство.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Королевство.png",
+    },
+    {
+      id: 14,
+      name: "Кочевник",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Кочевник.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Кочевник.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Кочевник.png",
+    },
+    {
+      id: 15,
+      name: "Некровирус",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Некровирус.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Некровирус.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Некровирус.png",
+    },
+    {
+      id: 16,
+      name: "Племена исарилов",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Племена.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Племена.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Племена.png",
+    },
+    {
+      id: 17,
+      name: "Призраки креусса",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Призраки.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Призраки.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Призраки.png",
+    },
+    {
+      id: 18,
+      name: "Психосеть л1з1кс",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Психосеть.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Психосеть.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Психосеть.png",
+    },
+    {
+      id: 19,
+      name: "Сардак н'орр",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Сардак.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Сардак.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Сардак.png",
+    },
+    {
+      id: 20,
+      name: "Серебряная стая",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Серебряная.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Серебряная.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Серебряная.png",
+    },
+    {
+      id: 21,
+      name: "Титаны ула",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Титаны.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Титаны.PNG",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Титаны.png",
+    },
+    {
+      id: 22,
+      name: "Тлеющие с муаата",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Тлеющие.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Тлеющие.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Тлеющие.png",
+    },
+    {
+      id: 23,
+      name: "Федерация сол",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Федерация.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Федерация.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Федерация.png",
+    },
+    {
+      id: 24,
+      name: "Хаканские эмираты",
+      srcInfo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/info/Хаканские.PNG",
+      srcToken:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/token/Хаканские.png",
+      srcLogo:
+        "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/logo/Хаканские.png",
+    },
+    {
+      id: 25,
+      data: {
+        i10: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/src/item/10.png",
+        i14: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/src/item/14.png",
+        iM: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/item/Мегатол.png",
+        c1: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/1.PNG",
+        c2: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/2.PNG",
+        cA: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Артефакт.PNG",
+        cD: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Действия.PNG",
+        cZ: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Закон.PNG",
+        cO: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Обещание.PNG",
+        cS: "https://raw.githubusercontent.com/Coolzzzer/Twilight_imperium_helper_API/refs/heads/main/src/back/Секретная.PNG",
+      },
+    },
+  ],
+};
 
-app.post('/data', async (req, res) => {
+app.post("/data", async (req, res) => {
   const { date, quantity, set } = req.body;
 
   if (!date || !quantity || !Array.isArray(set)) {
@@ -136,17 +287,24 @@ app.post('/data', async (req, res) => {
 
   await db.collection("users").doc("andrey").set(data);
 
-  res.status(201).json({ message: "Матч добавлен!", match: { date, quantity, set } });
+  res
+    .status(201)
+    .json({ message: "Матч добавлен!", match: { date, quantity, set } });
 });
 
-app.get('/initial/:id', (req, res) => {
-  const id = parseInt(req.params.id, 10); 
+app.get("/initial/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
 
   if (!Array.isArray(data.matches)) {
-    return res.status(500).json({ message: "Ошибка: данные о фракциях отсутствуют или имеют неверный формат" });
+    return res
+      .status(500)
+      .json({
+        message:
+          "Ошибка: данные о фракциях отсутствуют или имеют неверный формат",
+      });
   }
 
-  const faction = data.matches.find(item => item.id === id);
+  const faction = data.matches.find((item) => item.id === id);
 
   if (!faction) {
     return res.status(404).json({ message: "Фракция не найдена" });
@@ -155,7 +313,7 @@ app.get('/initial/:id', (req, res) => {
   res.json(faction);
 });
 
-app.post('/date', async (req, res) => {
+app.post("/date", async (req, res) => {
   const { date, quantity, set } = req.body;
 
   if (!date || !quantity || !Array.isArray(set)) {
@@ -175,10 +333,12 @@ app.post('/date', async (req, res) => {
     res.status(201).json({ message: "Матч добавлен!", match: newMatch });
   } catch (error) {
     console.error("Ошибка Firestore:", error.message);
-    res.status(500).json({ error: "Ошибка записи в Firestore", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Ошибка записи в Firestore", details: error.message });
   }
 });
-app.delete('/date/:id', async (req, res) => {
+app.delete("/date/:id", async (req, res) => {
   const objId = req.params.id;
 
   try {
@@ -190,7 +350,7 @@ app.delete('/date/:id', async (req, res) => {
     }
 
     let matches = doc.data().matches || [];
-    const newMatches = matches.filter(match => match.id !== objId); 
+    const newMatches = matches.filter((match) => match.id !== objId);
 
     if (matches.length === newMatches.length) {
       return res.status(404).json({ message: "Матч с таким ID не найден" });
@@ -201,11 +361,13 @@ app.delete('/date/:id', async (req, res) => {
     res.status(200).json({ message: "Матч удален!" });
   } catch (error) {
     console.error("Ошибка удаления:", error.message);
-    res.status(500).json({ error: "Ошибка удаления из Firestore", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Ошибка удаления из Firestore", details: error.message });
   }
 });
 
-app.get('/date', async (req, res) => {
+app.get("/date", async (req, res) => {
   try {
     const doc = await db.collection("users").doc("andrey").get();
 
@@ -215,11 +377,13 @@ app.get('/date', async (req, res) => {
       res.json({ message: "Данные отсутствуют" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Ошибка чтения из Firestore", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Ошибка чтения из Firestore", details: error.message });
   }
 });
 
-app.put('/date/:id', async (req, res) => {
+app.put("/date/:id", async (req, res) => {
   const objId = parseInt(req.params.id, 10);
 
   try {
@@ -231,7 +395,7 @@ app.put('/date/:id', async (req, res) => {
     }
 
     const userData = doc.data();
-    const index = userData.matches.findIndex(match => match.id === objId);
+    const index = userData.matches.findIndex((match) => match.id === objId);
 
     if (index === -1) {
       return res.status(404).json({ message: "Матч не найден" });
@@ -242,7 +406,9 @@ app.put('/date/:id', async (req, res) => {
 
     res.json(userData.matches[index]);
   } catch (error) {
-    res.status(500).json({ error: "Ошибка обновления данных", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Ошибка обновления данных", details: error.message });
   }
 });
 
